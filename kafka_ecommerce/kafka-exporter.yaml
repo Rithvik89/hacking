@@ -1,0 +1,91 @@
+---
+# Kafka JMX Exporter config to filter for key metrics
+rules:
+  # Broker health: Overall availability and replication status
+  - pattern: "kafka.controller<type=KafkaController, name=OfflinePartitionsCount>.*"
+    name: "kafka_controller_offline_partitions_count"
+    help: "The number of partitions that are offline (have no active leader)."
+    type: GAUGE
+  - pattern: "kafka.controller<type=KafkaController, name=ActiveControllerCount>.*"
+    name: "kafka_controller_active_controller_count"
+    help: "The number of active controllers in the cluster. This should always be 1."
+    type: GAUGE
+  - pattern: "kafka.server<type=ReplicaManager, name=UnderReplicatedPartitions>.*"
+    name: "kafka_server_under_replicated_partitions"
+    help: "The number of partitions that are under-replicated (have fewer in-sync replicas than their replication factor)."
+    type: GAUGE
+  - pattern: "kafka.server<type=ReplicaManager, name=IsrExpandsPerSec>.*"
+    name: "kafka_server_isr_expands_per_sec"
+    help: "The rate at which the In-Sync Replica (ISR) set expands."
+    type: GAUGE
+  - pattern: "kafka.server<type=ReplicaManager, name=IsrShrinksPerSec>.*"
+    name: "kafka_server_isr_shrinks_per_sec"
+    help: "The rate at which the In-Sync Replica (ISR) set shrinks."
+    type: GAUGE
+  - pattern: "kafka.server<type=ReplicaManager, name=LeaderCount>.*"
+    name: "kafka_server_replicamanager_leadercount"
+    help: "The number of leaders on this broker."
+    type: GAUGE
+
+  - pattern: "kafka.controller<type=KafkaController, name=GlobalTopicCount>.*"
+    name: "kafka_controller_kafkacontroller_globaltopiccount"
+    help: "The total number of topics in the cluster."
+    type: GAUGE
+
+  - pattern: "kafka.server<type=ReplicaManager, name=PartitionCount>.*"
+    name: "kafka_server_replicamanager_partitioncount"
+    help: "The number of partitions on this broker."
+    type: GAUGE
+  
+  # JVM metrics (recommended for overall health)
+  - pattern: "java.lang<type=Memory><HeapMemoryUsage>.*"
+    name: "kafka_jvm_memory_heap_usage"
+    help: "JVM heap memory usage."
+    type: GAUGE
+
+  - pattern: "java.lang<type=MemoryPool, name=([A-Za-z0-9]+)><Usage>.*"
+    name: "kafka_jvm_memory_pool_usage"
+    labels:
+      pool: "$1"
+    help: "JVM memory pool usage."
+    type: GAUGE
+
+  - pattern: "kafka.server<type=BrokerTopicMetrics, name=BytesOutPerSec, topic=(.+)><>Count"
+    name: "kafka_server_brokertopicmetrics_bytesout_total"
+    labels:
+      topic: "$1"
+    help: "Total bytes out per topic."
+    type: COUNTER
+
+  - pattern: "kafka.server<type=BrokerTopicMetrics, name=MessagesOutPerSec, topic=(.+)><>Count"
+    name: "kafka_server_brokertopicmetrics_messagesout_total"
+    labels:
+      topic: "$1"
+    help: "Total messages out per topic."
+    type: COUNTER
+
+  - pattern: "kafka.server<type=BrokerTopicMetrics, name=BytesInPerSec, topic=(.+)><>Count"
+    name: "kafka_server_brokertopicmetrics_bytesin_total"
+    labels:
+      topic: "$1"
+    help: "Total bytes in per topic."
+    type: COUNTER
+
+  - pattern: "kafka.server<type=BrokerTopicMetrics, name=MessagesInPerSec, topic=(.+)><>Count"
+    name: "kafka_server_brokertopicmetrics_messagesin_total"
+    labels:
+      topic: "$1"
+    help: "Total messages in per topic."
+    type: COUNTER
+
+   ##  Size
+   #MBean: kafka.log:type=Log,name=Size
+   #A metric for the total size in bytes of all log segments that belong to a given partition.
+
+  - pattern: "kafka.log<type=Log, name=Size, topic=(.+), partition=(.+)>"
+    name: "kafka_log_size_bytes"
+    labels:
+      topic: "$1"
+      partition: "$2"
+    help: "The total size in bytes of all log segments that belong to a given partition."
+    type: GAUGE
