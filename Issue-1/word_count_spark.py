@@ -38,12 +38,5 @@ for file in files:
     # 5. Collect results
     results = word_counts.collect()
 
-
-    end_cpu = process.cpu_percent(interval=None)
-    end_mem = process.memory_info().rss
-
-    print(f"CPU percent: {end_cpu}%")
-    print(f"Memory used: {end_mem / (1024 * 1024):.2f} MB")
-
     print(f"Unique words in {file}: {len(results)}")
     print(f"Time taken for {file}: {time.time() - start_time} seconds")

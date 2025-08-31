@@ -14,7 +14,7 @@ for file in filenames:
     if os.path.exists(file):
         os.remove(file)
 
-    while(True):
+    while True:
         with open(file, "a") as f:
             counter = 0
             for word in web2lowerset:
