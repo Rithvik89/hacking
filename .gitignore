@@ -1,1 +1,6 @@
 /KAFKA_ECOMMERCE/.venv
+
+/ISSUE-1/.venv
+/ISSUE-1/500MBfile.txt
+/ISSUE-1/1GBfile.txt
+/ISSUE-1/2GBfile.txt
