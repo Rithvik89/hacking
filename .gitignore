@@ -7,3 +7,6 @@
 
 
 /ISSUE-3/.venv
+/ISSUE-3/__pycache__/
+
+/ISSUE-36/.venv
